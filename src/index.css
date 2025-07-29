@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --fallback-bc: #1c1c1c !important;
+  --color-base-content: #1c1c1c !important;
+  --color-purple-700: #3336c4;
+  --color-purple-500: #6366f1; /* 메인컬러 */
+  --color-purple-300: #a5b4fc; /*서브컬러 */
+  --color-red: #ff6d6d;
+  --color-red-700: #ff4141;
+  --color-yellow: #e5e03e;
+  --color-yellow-700: #e4de25;
+  --color-green: #7bd35b;
+  --color-green-700: #5ec23a;
+}
+body {
+  font-family: "Roboto", sans-serif;
+}

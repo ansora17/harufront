@@ -1,0 +1,9 @@
+# Supabase Configuration
+# Copy this content to a new file named .env in your project root
+
+# Get these from your Supabase dashboard:
+# 1. Go to Settings > API
+# 2. Copy "Project URL" and "anon public" key
+
+VITE_SUPABASE_URL=https://admehgvqowpibiuwugpv.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key-here 
