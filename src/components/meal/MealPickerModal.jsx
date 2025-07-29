@@ -19,9 +19,10 @@ function MealPickerModal() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 sm:right-28 z-50">
+    <div className="bottom-6 right-6 z-50">
+      {/* fixed 추가 */}
       <button
-        className="btn text-white rounded-full bg-purple-500 text-xl border-none w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg hover:bg-purple-600 transition-all duration-200"
+        className="btn text-white rounded-full bg-purple-500 text-xl sm:text-3xl border-none w-13 h-13 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg hover:bg-purple-700 transition-all duration-200"
         onClick={() => setOpen(true)}
       >
         <span className="text-2xl">+</span>
@@ -52,7 +53,7 @@ function MealPickerModal() {
                 취소
               </button>
               <button
-                className="btn bg-purple-500 text-white hover:bg-purple-600"
+                className="btn bg-purple-500 text-white hover:bg-purple-700"
                 onClick={handleConfirm}
               >
                 확인
