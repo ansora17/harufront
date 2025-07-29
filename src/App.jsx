@@ -9,8 +9,7 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />;
-      <DebugAuthOverlay />
+      <RouterProvider router={router} />;{/* <DebugAuthOverlay /> */}
     </>
   );
 }

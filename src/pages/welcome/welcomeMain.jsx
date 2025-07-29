@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function WelcomeMain() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-purple-300">
       {/* 헤더 */}
       <header className="w-full bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -36,7 +36,7 @@ function WelcomeMain() {
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
           AI로 쉽고 간편한
           <br />
-          <span className="text-purple-600">칼로리 식단 기록</span>
+          <span className="text-purple-500">칼로리 식단 기록</span>
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
           사진 한 장으로 영양소를 자동 분석하고,
@@ -46,7 +46,7 @@ function WelcomeMain() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/member/signup"
-            className="px-8 py-4 bg-purple-500 text-white text-lg font-semibold rounded-lg hover:bg-purple-600 transition-colors"
+            className="px-8 py-4 bg-purple-500 text-white text-lg font-semibold rounded-lg hover:bg-purple-700 transition-colors"
           >
             무료로 시작하기
           </Link>
@@ -111,7 +111,7 @@ function WelcomeMain() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-purple-300 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🤖</span>
             </div>
             <h3 className="font-bold text-lg mb-2">AI 자동 분석</h3>
@@ -120,7 +120,7 @@ function WelcomeMain() {
             </p>
           </div>
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-purple-300 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">📈</span>
             </div>
             <h3 className="font-bold text-lg mb-2">개인 맞춤 목표</h3>
@@ -129,7 +129,7 @@ function WelcomeMain() {
             </p>
           </div>
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-purple-300 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">📊</span>
             </div>
             <h3 className="font-bold text-lg mb-2">상세한 리포트</h3>
@@ -138,7 +138,7 @@ function WelcomeMain() {
             </p>
           </div>
           <div className="text-center p-6 bg-white rounded-lg shadow-md">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-purple-300 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🏆</span>
             </div>
             <h3 className="font-bold text-lg mb-2">지속 가능한 습관</h3>

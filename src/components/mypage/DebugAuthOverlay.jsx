@@ -32,7 +32,7 @@ export default function DebugAuthOverlay() {
   if (process.env.NODE_ENV === "production") return null;
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black bg-opacity-75 text-white p-3 rounded-lg text-xs z-50">
+    <div className="fixed bottom-25 right-4 bg-black bg-opacity-75 text-white p-3 rounded-lg text-xs z-50">
       <div className="space-y-1">
         <div>
           <span className="font-bold">Auth:</span>{" "}

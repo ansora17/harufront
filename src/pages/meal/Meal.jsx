@@ -14,6 +14,7 @@ import MealPickerModal from "../../components/meal/MealPickerModal";
 import MealCard from "../../components/haruReport/record/MealCard";
 import SubLayout from "../../layout/SubLayout";
 import { useNavigate } from "react-router-dom";
+import MealCalendarModal from "../../components/meal/MealCalendarModal";
 
 function Meal() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ function Meal() {
 
   const [isMealPickerOpen, setIsMealPickerOpen] = useState(false);
   const [selectedMealType, setSelectedMealType] = useState("");
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // 목표 칼로리 (임시로 2000으로 설정)
   const calorieGoal = 2000;
@@ -47,7 +49,8 @@ function Meal() {
 
   // 카드 클릭 핸들러
   const handleCardClick = (record) => {
-    navigate("/dashboard/result/{id}", { state: record });
+    const id = record.mealId || record.id;
+    navigate(`/dashboard/result/${id}`, { state: record });
   };
 
   // 식사 기록 불러오기 함수
@@ -196,7 +199,10 @@ function Meal() {
           >
             〈
           </div>
-          <div className="text-center text-lg sm:text-2xl font-bold">
+          <div
+            className="text-center text-lg sm:text-2xl font-bold cursor-pointer"
+            onClick={() => setIsCalendarOpen(true)}
+          >
             {new Date(selectedDate)
               .toLocaleDateString("ko-KR", {
                 year: "2-digit",
@@ -362,6 +368,12 @@ function Meal() {
         </div>
       </div>
       <MealPickerModal />
+      <MealCalendarModal
+        open={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+        onSelectDate={(date) => dispatch(setSelectedDate(date))}
+        memberId={1}
+      />
     </>
   );
 }

@@ -8,7 +8,7 @@ import MyPage from "../pages/mypage/MyPage";
 import memberRoutes from "./memberRoutes";
 import mypageRoutes from "./mypageRoutes";
 import WelcomeMain from "../pages/welcome/welcomeMain";
-import { Result } from "postcss";
+import Result from "../pages/meal/Result";
 
 const root = createBrowserRouter([
   // 웰컴 페이지를 루트로 설정 (비로그인 사용자용)

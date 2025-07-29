@@ -3,6 +3,11 @@ import SubLayout from "../../layout/SubLayout";
 import { useSelector, useDispatch } from "react-redux";
 import { setMealRecords } from "../../slices/mealSlice";
 import axios from "axios";
+import MealCalendarModal from "../../components/meal/MealCalendarModal";
+import FormSelect from "../../components/mypage/FormSelect";
+import TimePickerModal from "../../components/meal/TimePickerModal";
+import MealTypeModal from "../../components/meal/MealTypeModal";
+import DatePickerModal from "../../components/meal/DatePickerModal";
 
 function Analyis() {
   const fileInputRef = useRef(null);
@@ -14,6 +19,10 @@ function Analyis() {
   const [images, setImages] = useState([]); //추가 이미지
   const mealRecords = useSelector((state) => state.meal.mealRecords);
   const dispatch = useDispatch();
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
+  const [isMealTypeModalOpen, setIsMealTypeModalOpen] = useState(false);
+  const [memo, setMemo] = useState(""); // 메모 상태 추가
 
   useEffect(() => {
     setTimestamp(new Date());
@@ -101,8 +110,8 @@ function Analyis() {
 
   const totalNutrition = resultData.reduce(
     (acc, cur) => {
-      acc.kcal += cur.kcal || 0;
-      acc.carbs += cur.carbs || 0;
+      acc.kcal += cur.calories || 0;
+      acc.carbs += cur.carbohydrate || 0;
       acc.protein += cur.protein || 0;
       acc.fat += cur.fat || 0;
       acc.sodium += cur.sodium || 0;
@@ -120,8 +129,8 @@ function Analyis() {
 
     return {
       foodName: text.match(/요리명:\s*(.+)/)?.[1] || "알 수 없음",
-      kcal: get("칼로리"),
-      carbs: get("탄수화물"),
+      calories: get("칼로리"),
+      carbohydrate: get("탄수화물"),
       protein: get("단백질"),
       fat: get("지방"),
       sodium: get("나트륨"),
@@ -130,10 +139,26 @@ function Analyis() {
     };
   };
 
-  const handleSaveMeal = () => {
+  const handleSaveMeal = async () => {
+    // 필수 데이터 검증
+    if (!selectedMeal) {
+      alert("식사 타입을 선택해주세요.");
+      return;
+    }
+
+    if (!timestamp) {
+      alert("날짜와 시간을 설정해주세요.");
+      return;
+    }
+
+    if (resultData.length === 0) {
+      alert("분석된 음식 데이터가 없습니다.");
+      return;
+    }
+
     const record = {
       id: Date.now(),
-      imageUrl: images[0]?.url,
+      imageUrl: images[0]?.url || "",
       mealType: selectedMeal,
       timestamp: timestamp.toISOString(),
       kcal: totalNutrition.kcal,
@@ -142,10 +167,72 @@ function Analyis() {
       fat: totalNutrition.fat,
     };
 
-    // Redux에 저장
-    dispatch(setMealRecords([...mealRecords, record]));
-    alert("식사 기록이 저장되었습니다.");
+    // foods 배열 생성 (resultData 그대로 사용)
+    const foods = resultData.map((food) => ({
+      foodName: food.foodName || "알 수 없음",
+      calories: parseInt(food.calories) || 0,
+      carbohydrate: parseInt(food.carbohydrate) || 0,
+      protein: parseInt(food.protein) || 0,
+      fat: parseInt(food.fat) || 0,
+      sodium: parseInt(food.sodium) || 0,
+      fiber: parseInt(food.fiber) || 0,
+    }));
+
+    // mealType 한글-영어 매핑
+    const mealTypeMap = {
+      아침: "BREAKFAST",
+      점심: "LUNCH",
+      저녁: "DINNER",
+      간식: "SNACK",
+    };
+    const mealTypeValue =
+      mealTypeMap[selectedMeal] || selectedMeal?.toUpperCase() || "DINNER";
+
+    // modifiedAt을 'YYYY-MM-DDTHH:mm' 형식으로 변환
+    const pad = (n) => n.toString().padStart(2, "0");
+    const year = timestamp.getFullYear();
+    const month = pad(timestamp.getMonth() + 1);
+    const day = pad(timestamp.getDate());
+    const hour = pad(timestamp.getHours());
+    const minute = pad(timestamp.getMinutes());
+    const modifiedAtStr = `${year}-${month}-${day}T${hour}:${minute}`;
+
+    // POST용 데이터 구조 - 서버 요구사항에 맞게 수정
+    const postData = {
+      mealType: mealTypeValue,
+      imageUrl: "", // imageUrl을 빈 문자열로 포함
+      memo: memo || "",
+      foods: foods,
+      modifiedAt: modifiedAtStr,
+      totalCalories: parseInt(totalNutrition.kcal) || 0,
+    };
+
+    console.log("POST 데이터:", JSON.stringify(postData, null, 2)); // 디버깅용
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/meals?memberId=1",
+        postData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("서버 응답:", response.data); // 디버깅용
+
+      // Redux에 저장
+      dispatch(setMealRecords([...mealRecords, record]));
+      alert("식사 기록이 저장되었습니다.");
+    } catch (err) {
+      console.error("에러 상세:", err.response?.data || err.message); // 디버깅용
+      alert(
+        "식사 기록 저장 실패: " + (err.response?.data?.message || err.message)
+      );
+    }
   };
+
   return (
     <>
       <SubLayout to={"/"} menu={"식단분석"} label={"식사요약"} />
@@ -155,18 +242,25 @@ function Analyis() {
           <input
             type="text"
             placeholder="날짜를 입력해 주세요"
-            className="input input-bordered flex-1 text-center"
+            className="input input-bordered flex-1 text-center cursor-pointer"
+            value={timestamp ? formatDate(timestamp) : ""}
+            readOnly
+            onClick={() => setIsDateModalOpen(true)}
           />
           <input
             type="text"
             placeholder="시간을 입력해 주세요"
-            className="input input-bordered flex-1 text-center"
+            className="input input-bordered flex-1 text-center cursor-pointer"
+            value={timestamp ? formatTime(timestamp) : ""}
+            readOnly
+            onClick={() => setIsTimeModalOpen(true)}
           />
           <input
             type="text"
             value={selectedMeal}
             readOnly
-            className="input input-bordered flex-1 text-center"
+            className="input input-bordered flex-1 text-center cursor-pointer"
+            onClick={() => setIsMealTypeModalOpen(true)}
           />
         </div>
 
@@ -295,6 +389,17 @@ function Analyis() {
           </div>
         ))}
 
+        {/* 메모 입력 필드 */}
+        <div className="mb-4">
+          <textarea
+            className="textarea textarea-bordered w-full"
+            placeholder="메모를 입력하세요 (예: 저녁은 간단하게 샌드위치와 주스.)"
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            rows={2}
+          />
+        </div>
+
         <div className="pt-8">
           <button
             className="btn bg-purple-500 text-white w-full rounded-lg py-6 text-base"
@@ -315,6 +420,50 @@ function Analyis() {
           </div>
         </div>
       )}
+      <DatePickerModal
+        open={isDateModalOpen}
+        onClose={() => setIsDateModalOpen(false)}
+        onConfirm={(date) => {
+          const newDate = new Date(
+            date + "T" + (timestamp ? formatTime(timestamp) : "00:00")
+          );
+          setTimestamp(newDate);
+        }}
+        initialDate={
+          timestamp
+            ? formatDate(timestamp).replace(/\./g, "-").replace(/\s.*/, "")
+            : ""
+        }
+        memberId={1}
+      />
+      <TimePickerModal
+        open={isTimeModalOpen}
+        onClose={() => setIsTimeModalOpen(false)}
+        onConfirm={(timeString) => {
+          if (timeString) {
+            const [hour, minute] = timeString.split(":");
+            const newDate = new Date(timestamp);
+            newDate.setHours(Number(hour));
+            newDate.setMinutes(Number(minute));
+            setTimestamp(newDate);
+          }
+        }}
+        initialTime={
+          timestamp
+            ? `${String(timestamp.getHours()).padStart(2, "0")}:${String(
+                timestamp.getMinutes()
+              ).padStart(2, "0")}`
+            : ""
+        }
+      />
+      <MealTypeModal
+        open={isMealTypeModalOpen}
+        onClose={() => setIsMealTypeModalOpen(false)}
+        onConfirm={(type) => {
+          dispatch({ type: "meal/setSelectedMeal", payload: type });
+        }}
+        initialType={selectedMeal}
+      />
     </>
   );
 }
