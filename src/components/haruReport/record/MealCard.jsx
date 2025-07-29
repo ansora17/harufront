@@ -24,6 +24,10 @@ export default function MealCard({ meal }) {
             />
           </div>
         </div>
+
+        <div>
+          
+        </div>
         {/* 식사 정보 헤더 */}
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-base sm:text-lg font-semibold text-gray-800">
@@ -37,7 +41,7 @@ export default function MealCard({ meal }) {
             <p className="text-base sm:text-lg font-semibold">
               {meal.totalKcal || meal.kcal || meal.calories}kcal
             </p>
-          </div>
+          </div> 
         </div>
 
         {meal.foods && meal.foods.length > 0 && (
