@@ -6,9 +6,9 @@ import haruReportRoutes from "./haruReportRoutes";
 import communityRoutes from "./communityRoutes";
 import MyPage from "../pages/mypage/MyPage";
 import memberRoutes from "./memberRoutes";
-import Result from "../pages/meal/result";
 import mypageRoutes from "./mypageRoutes";
 import WelcomeMain from "../pages/welcome/welcomeMain";
+import { Result } from "postcss";
 
 const root = createBrowserRouter([
   // 웰컴 페이지를 루트로 설정 (비로그인 사용자용)

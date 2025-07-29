@@ -13,9 +13,11 @@ import axios from "axios";
 import MealPickerModal from "../../components/meal/MealPickerModal";
 import MealCard from "../../components/haruReport/record/MealCard";
 import SubLayout from "../../layout/SubLayout";
+import { useNavigate } from "react-router-dom";
 
 function Meal() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // ✅ Redux에서 상태 가져오기
   const {
@@ -45,7 +47,7 @@ function Meal() {
 
   // 카드 클릭 핸들러
   const handleCardClick = (record) => {
-    // 필요시 상세 보기 모달 등을 열 수 있습니다
+    navigate("/dashboard/result/{id}", { state: record });
   };
 
   // 식사 기록 불러오기 함수
@@ -87,7 +89,7 @@ function Meal() {
           if (record.foods && Array.isArray(record.foods)) {
             record.foods.forEach((food) => {
               recordCalories += food.calories || 0;
-              recordCarbs += food.carbs || 0;
+              recordCarbs += food.carbohydrate || 0;
               recordProtein += food.protein || 0;
               recordFat += food.fat || 0;
             });
@@ -123,7 +125,7 @@ function Meal() {
             sum +
             (record.foods
               ? record.foods.reduce(
-                  (foodSum, food) => foodSum + (food.carbs || 0),
+                  (foodSum, food) => foodSum + (food.carbohydrate || 0),
                   0
                 )
               : 0)
@@ -290,7 +292,7 @@ function Meal() {
               key={record.mealId || record.id}
               onClick={() => handleCardClick(record)}
             >
-              <div className="card justify-between bg-base-100 w-full rounded-xl shadow-lg p-[20px]">
+              <div className="card justify-between bg-base-100 w-full rounded-xl shadow-lg p-[20px] hover:bg-gray-100 transition-colors duration-200">
                 <figure className="mt-4">
                   <img
                     className="rounded-xl h-[180px] w-full object-cover"
@@ -313,11 +315,11 @@ function Meal() {
                     <p>
                       탄{" "}
                       <span className="text-green">
-                        {record.totalCarbs ||
-                          record.carbs ||
+                        {record.totalcarbohydrate ||
+                          record.carbohydrate ||
                           (record.foods
                             ? record.foods.reduce(
-                                (sum, food) => sum + (food.carbs || 0),
+                                (sum, food) => sum + (food.carbohydrate || 0),
                                 0
                               )
                             : 0)}

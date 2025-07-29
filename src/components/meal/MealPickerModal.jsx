@@ -19,7 +19,7 @@ function MealPickerModal() {
   };
 
   return (
-    <div className="bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-6 z-50">
       {/* fixed 추가 */}
       <button
         className="btn text-white rounded-full bg-purple-500 text-xl sm:text-3xl border-none w-13 h-13 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg hover:bg-purple-700 transition-all duration-200"
