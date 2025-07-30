@@ -13,9 +13,12 @@ import axios from "axios";
 import MealPickerModal from "../../components/meal/MealPickerModal";
 import MealCard from "../../components/haruReport/record/MealCard";
 import SubLayout from "../../layout/SubLayout";
+import { useNavigate } from "react-router-dom";
+import MealCalendarModal from "../../components/meal/MealCalendarModal";
 
 function Meal() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // ✅ Redux에서 상태 가져오기
   const {
@@ -31,6 +34,7 @@ function Meal() {
 
   const [isMealPickerOpen, setIsMealPickerOpen] = useState(false);
   const [selectedMealType, setSelectedMealType] = useState("");
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // 목표 칼로리 (임시로 2000으로 설정)
   const calorieGoal = 2000;
@@ -45,7 +49,8 @@ function Meal() {
 
   // 카드 클릭 핸들러
   const handleCardClick = (record) => {
-    // 필요시 상세 보기 모달 등을 열 수 있습니다
+    const id = record.mealId || record.id;
+    navigate(`/dashboard/result/${id}`, { state: record });
   };
 
   // 식사 기록 불러오기 함수
@@ -87,7 +92,7 @@ function Meal() {
           if (record.foods && Array.isArray(record.foods)) {
             record.foods.forEach((food) => {
               recordCalories += food.calories || 0;
-              recordCarbs += food.carbs || 0;
+              recordCarbs += food.carbohydrate || 0;
               recordProtein += food.protein || 0;
               recordFat += food.fat || 0;
             });
@@ -123,7 +128,7 @@ function Meal() {
             sum +
             (record.foods
               ? record.foods.reduce(
-                  (foodSum, food) => foodSum + (food.carbs || 0),
+                  (foodSum, food) => foodSum + (food.carbohydrate || 0),
                   0
                 )
               : 0)
@@ -194,7 +199,10 @@ function Meal() {
           >
             〈
           </div>
-          <div className="text-center text-lg sm:text-2xl font-bold">
+          <div
+            className="text-center text-lg sm:text-2xl font-bold cursor-pointer"
+            onClick={() => setIsCalendarOpen(true)}
+          >
             {new Date(selectedDate)
               .toLocaleDateString("ko-KR", {
                 year: "2-digit",
@@ -290,7 +298,7 @@ function Meal() {
               key={record.mealId || record.id}
               onClick={() => handleCardClick(record)}
             >
-              <div className="card justify-between bg-base-100 w-full rounded-xl shadow-lg p-[20px]">
+              <div className="card justify-between bg-base-100 w-full rounded-xl shadow-lg p-[20px] hover:bg-gray-100 transition-colors duration-200">
                 <figure className="mt-4">
                   <img
                     className="rounded-xl h-[180px] w-full object-cover"
@@ -313,11 +321,11 @@ function Meal() {
                     <p>
                       탄{" "}
                       <span className="text-green">
-                        {record.totalCarbs ||
-                          record.carbs ||
+                        {record.totalcarbohydrate ||
+                          record.carbohydrate ||
                           (record.foods
                             ? record.foods.reduce(
-                                (sum, food) => sum + (food.carbs || 0),
+                                (sum, food) => sum + (food.carbohydrate || 0),
                                 0
                               )
                             : 0)}
@@ -360,6 +368,12 @@ function Meal() {
         </div>
       </div>
       <MealPickerModal />
+      <MealCalendarModal
+        open={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+        onSelectDate={(date) => dispatch(setSelectedDate(date))}
+        memberId={1}
+      />
     </>
   );
 }
