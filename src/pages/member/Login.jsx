@@ -16,8 +16,8 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [form, setForm] = useState({
-    nickname: "",
-    password: "",
+    nickname: "testuser",
+    password: "Password12@",
   });
 
   const [errors, setErrors] = useState({});
@@ -119,7 +119,7 @@ export default function Login() {
               htmlFor="nickname"
               className="block text-sm font-medium text-gray-700"
             >
-              닉네임
+              닉네임 {form.nickname}
             </label>
             <FormInput
               name="nickname"
